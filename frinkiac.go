@@ -38,5 +38,9 @@ func getFrinkiacFrameData(query string) ([]Frames, error) {
 
 //GetFrinkiacFrame Sends a URL of a frame from Frinkiac
 func GetFrinkiacFrame(query string) (string, error) {
-	return "", nil
+	frames, err := getFrinkiacFrameData(query)
+	if err != nil {
+		return "", err
+	}
+	return "https://frinkiac.com/img/" + frames[0].Episode + "/" + string(frames[0].Timestamp) + ".jpg", nil
 }
