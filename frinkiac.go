@@ -57,7 +57,7 @@ func getFrinkiacFrameData(query string) ([]Frames, error) {
 func getFrinkiacEpisodeInfo(frame Frames) (Episode, error) {
 	var info Episode
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", "https://frinkiac.com/api/capton?e="+frame.Episode+"&t"+strconv.Itoa(frame.Timestamp), nil)
+	req, err := http.NewRequest("GET", "https://frinkiac.com/api/caption?e="+frame.Episode+"&t="+strconv.Itoa(frame.Timestamp), nil)
 	if err != nil {
 		return info, err
 	}
@@ -96,5 +96,5 @@ func GetFrinkiacFrameAndCaption(query string) (string, error) {
 	}
 	cap := wordwrap.WrapString(info.Subtitles[0].Content, 25)
 	uEnc := base64.URLEncoding.EncodeToString([]byte(cap))
-	return "https://frinkiac.com/meme/" + frames[0].Episode + "/" + strconv.Itoa(frames[0].Timestamp) + "jpg?b64lines=" + uEnc, nil
+	return "https://frinkiac.com/meme/" + frames[0].Episode + "/" + strconv.Itoa(frames[0].Timestamp) + ".jpg?b64lines=" + uEnc, nil
 }
