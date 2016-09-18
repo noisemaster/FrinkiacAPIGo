@@ -14,6 +14,20 @@ type Frames struct {
 	Timestamp int    `json:"Timestamp"`
 }
 
+//Episode Holds information about an Episode
+type Episode struct {
+	Frame     Frames `json:"Frame"`
+	Subtitles []struct {
+		ID             int    `json:"Id"`
+		RepTimestamp   int    `json:"RepresentativeTimestamp"`
+		Episode        string `json:"Episode"`
+		StartTimestamp int    `json:"StartTimestamp"`
+		EndTimestamp   int    `json:"EndTimestamp"`
+		Content        string `json:"Content"`
+	} `json:"Subtitles"`
+	Nearby []Frames `json:"Nearby"`
+}
+
 func getFrinkiacFrameData(query string) ([]Frames, error) {
 	var info []Frames
 	client := &http.Client{}
@@ -34,6 +48,12 @@ func getFrinkiacFrameData(query string) ([]Frames, error) {
 	}
 	json.Unmarshal(body, &info)
 	return info, nil
+}
+
+func getFrinkiacEpisodeInfo(frame Frames) (Episode, error) {
+	var epi Episode
+
+	return epi, nil
 }
 
 //GetFrinkiacFrame Sends a URL of a frame from Frinkiac
