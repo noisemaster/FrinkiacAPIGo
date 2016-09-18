@@ -57,7 +57,7 @@ func getFrinkiacFrameData(query string) ([]Frames, error) {
 func getFrinkiacEpisodeInfo(frame Frames) (Episode, error) {
 	var info Episode
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", "https://frinkiac.com/api/capton?e="+frame.Episode+"&t"+string(frame.Timestamp), nil)
+	req, err := http.NewRequest("GET", "https://frinkiac.com/api/capton?e="+frame.Episode+"&t"+strconv.Itoa(frame.Timestamp), nil)
 	if err != nil {
 		return info, err
 	}
