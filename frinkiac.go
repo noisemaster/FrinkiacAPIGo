@@ -51,9 +51,24 @@ func getFrinkiacFrameData(query string) ([]Frames, error) {
 }
 
 func getFrinkiacEpisodeInfo(frame Frames) (Episode, error) {
-	var epi Episode
-
-	return epi, nil
+	var info Episode
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", "https://frinkiac.com/api/capton?e="+frame.Episode+"&t"+string(frame.Timestamp), nil)
+	if err != nil {
+		return info, err
+	}
+	req.Header.Set("User-Agent", "Frinkiac_Api_Go/0.1")
+	resp, err := client.Do(req)
+	if err != nil {
+		return info, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return info, err
+	}
+	json.Unmarshal(body, &info)
+	return info, nil
 }
 
 //GetFrinkiacFrame Sends a URL of a frame from Frinkiac
