@@ -1,10 +1,13 @@
 package frinkiac
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"strings"
+
+	"github.com/mitchellh/go-wordwrap"
 )
 
 //Frames Holds data about a Frinkiac (or Morbotron) search
@@ -78,4 +81,19 @@ func GetFrinkiacFrame(query string) (string, error) {
 		return "", err
 	}
 	return "https://frinkiac.com/img/" + frames[0].Episode + "/" + string(frames[0].Timestamp) + ".jpg", nil
+}
+
+//GetFrinkiacFrameAndCaption Returns a URL of a frame with a caption
+func GetFrinkiacFrameAndCaption(query string) (string, error) {
+	frames, err := getFrinkiacFrameData(query)
+	if err != nil {
+		return "", err
+	}
+	info, err := getFrinkiacEpisodeInfo(frames[0])
+	if err != nil {
+		return "", err
+	}
+	cap := wordwrap.WrapString(info.Subtitles[0].Content, 25)
+	uEnc := base64.URLEncoding.EncodeToString([]byte(cap))
+	return "https://frinkiac.com/meme/" + frames[0].Episode + "/" + string(frames[0].Timestamp) + "jpg?b64lines=" + uEnc, nil
 }
