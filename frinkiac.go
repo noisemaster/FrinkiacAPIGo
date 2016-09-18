@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-//Frames Holds data about a Frinkiac search
+//Frames Holds data about a Frinkiac (or Morbotron) search
 type Frames struct {
 	ID        int    `json:"Id"`
 	Episode   string `json:"Episode"`
