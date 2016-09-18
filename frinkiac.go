@@ -75,6 +75,49 @@ func getFrinkiacEpisodeInfo(frame Frames) (Episode, error) {
 	return info, nil
 }
 
+func getMorbotronFrameData(query string) ([]Frames, error) {
+	var info []Frames
+	client := &http.Client{}
+	r := strings.NewReplacer(" ", "%20")
+	req, err := http.NewRequest("GET", "https://morbotron.com/api/search?q="+r.Replace(query), nil)
+	if err != nil {
+		return info, err
+	}
+	req.Header.Set("User-Agent", "Frinkiac_Api_Go/0.1")
+	resp, err := client.Do(req)
+	if err != nil {
+		return info, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return info, err
+	}
+	json.Unmarshal(body, &info)
+	return info, nil
+}
+
+func getMorbotronEpisodeInfo(frame Frames) (Episode, error) {
+	var info Episode
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", "https://morbotron.com/api/caption?e="+frame.Episode+"&t="+strconv.Itoa(frame.Timestamp), nil)
+	if err != nil {
+		return info, err
+	}
+	req.Header.Set("User-Agent", "Frinkiac_Api_Go/0.1")
+	resp, err := client.Do(req)
+	if err != nil {
+		return info, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return info, err
+	}
+	json.Unmarshal(body, &info)
+	return info, nil
+}
+
 //GetFrinkiacFrame Sends a URL of a frame from Frinkiac
 func GetFrinkiacFrame(query string) (string, error) {
 	frames, err := getFrinkiacFrameData(query)
@@ -84,8 +127,8 @@ func GetFrinkiacFrame(query string) (string, error) {
 	return "https://frinkiac.com/img/" + frames[0].Episode + "/" + strconv.Itoa(frames[0].Timestamp) + ".jpg", nil
 }
 
-//GetFrinkiacFrameAndCaption Returns a URL of a frame with a caption
-func GetFrinkiacFrameAndCaption(query string) (string, error) {
+//GetFrinkiacMeme Returns a URL of a frame with a caption
+func GetFrinkiacMeme(query string) (string, error) {
 	frames, err := getFrinkiacFrameData(query)
 	if err != nil {
 		return "", err
@@ -97,4 +140,28 @@ func GetFrinkiacFrameAndCaption(query string) (string, error) {
 	cap := wordwrap.WrapString(info.Subtitles[0].Content, 25)
 	uEnc := base64.URLEncoding.EncodeToString([]byte(cap))
 	return "https://frinkiac.com/meme/" + frames[0].Episode + "/" + strconv.Itoa(frames[0].Timestamp) + ".jpg?b64lines=" + uEnc, nil
+}
+
+//GetMorbotronFrame Sends a URL of a frame from Morbotron
+func GetMorbotronFrame(query string) (string, error) {
+	frames, err := getMorbotronFrameData(query)
+	if err != nil {
+		return "", err
+	}
+	return "https://morbotron.com/img/" + frames[0].Episode + "/" + strconv.Itoa(frames[0].Timestamp) + ".jpg", nil
+}
+
+//GetMorbotronMeme Returns a URL of a frame with a caption
+func GetMorbotronMeme(query string) (string, error) {
+	frames, err := getMorbotronFrameData(query)
+	if err != nil {
+		return "", err
+	}
+	info, err := getMorbotronEpisodeInfo(frames[0])
+	if err != nil {
+		return "", err
+	}
+	cap := wordwrap.WrapString(info.Subtitles[0].Content, 25)
+	uEnc := base64.URLEncoding.EncodeToString([]byte(cap))
+	return "https://morbotron.com/meme/" + frames[0].Episode + "/" + strconv.Itoa(frames[0].Timestamp) + ".jpg?b64lines=" + uEnc, nil
 }
