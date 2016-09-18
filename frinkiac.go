@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/mitchellh/go-wordwrap"
@@ -80,7 +81,7 @@ func GetFrinkiacFrame(query string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return "https://frinkiac.com/img/" + frames[0].Episode + "/" + string(frames[0].Timestamp) + ".jpg", nil
+	return "https://frinkiac.com/img/" + frames[0].Episode + "/" + strconv.Itoa(frames[0].Timestamp) + ".jpg", nil
 }
 
 //GetFrinkiacFrameAndCaption Returns a URL of a frame with a caption
@@ -95,5 +96,5 @@ func GetFrinkiacFrameAndCaption(query string) (string, error) {
 	}
 	cap := wordwrap.WrapString(info.Subtitles[0].Content, 25)
 	uEnc := base64.URLEncoding.EncodeToString([]byte(cap))
-	return "https://frinkiac.com/meme/" + frames[0].Episode + "/" + string(frames[0].Timestamp) + "jpg?b64lines=" + uEnc, nil
+	return "https://frinkiac.com/meme/" + frames[0].Episode + "/" + strconv.Itoa(frames[0].Timestamp) + "jpg?b64lines=" + uEnc, nil
 }
