@@ -67,3 +67,10 @@ func TestMorboGifMeme(t *testing.T) {
 		t.Errorf("Recv: %s \n Want: %s \n %s\n", recv, final, "URLs were not equal")
 	}
 }
+
+func TestGarbage(t *testing.T) {
+	_, err := GetMorbotronGifMeme("soafgnme")
+	if err == nil {
+		t.Error(err)
+	}
+}
