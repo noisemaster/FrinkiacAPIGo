@@ -3,6 +3,7 @@ package frinkiac
 import (
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -50,6 +51,9 @@ func getFrinkiacFrameData(query string) ([]Frames, error) {
 	if err != nil {
 		return info, err
 	}
+	if string(body) == "[]" {
+		return info, errors.New("No results found for this search")
+	}
 	json.Unmarshal(body, &info)
 	return info, nil
 }
@@ -92,6 +96,9 @@ func getMorbotronFrameData(query string) ([]Frames, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return info, err
+	}
+	if string(body) == "[]" {
+		return info, errors.New("No results found for this search")
 	}
 	json.Unmarshal(body, &info)
 	return info, nil
