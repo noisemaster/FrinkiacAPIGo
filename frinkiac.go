@@ -149,6 +149,19 @@ func GetFrinkiacMeme(query string) (string, error) {
 	return "https://frinkiac.com/meme/" + frames[0].Episode + "/" + strconv.Itoa(frames[0].Timestamp) + ".jpg?b64lines=" + uEnc, nil
 }
 
+//GetFrinkiacGif Returns a URL for a GIF with a caption
+func GetFrinkiacGif(query string) (string, error) {
+	frames, err := getFrinkiacFrameData(query)
+	if err != nil {
+		return "", err
+	}
+	info, err := getFrinkiacEpisodeInfo(frames[0])
+	if err != nil {
+		return "", err
+	}
+	return "https://frinkiac.com/gif/" + info.Frame.Episode + "/" + strconv.Itoa(info.Subtitles[0].RepTimestamp) + "/" + strconv.Itoa(info.Subtitles[len(info.Subtitles)-1].EndTimestamp) + ".gif", nil
+}
+
 //GetFrinkiacGifMeme Returns a URL for a GIF with a caption
 func GetFrinkiacGifMeme(query string) (string, error) {
 	var cap string
@@ -191,6 +204,19 @@ func GetMorbotronMeme(query string) (string, error) {
 	cap := wordwrap.WrapString(info.Subtitles[0].Content, 25)
 	uEnc := base64.URLEncoding.EncodeToString([]byte(cap))
 	return "https://morbotron.com/meme/" + frames[0].Episode + "/" + strconv.Itoa(frames[0].Timestamp) + ".jpg?b64lines=" + uEnc, nil
+}
+
+//GetMorbotronGif Returns a URL for a GIF with a caption
+func GetMorbotronGif(query string) (string, error) {
+	frames, err := getMorbotronFrameData(query)
+	if err != nil {
+		return "", err
+	}
+	info, err := getMorbotronEpisodeInfo(frames[0])
+	if err != nil {
+		return "", err
+	}
+	return "https://morbotron.com/gif/" + info.Frame.Episode + "/" + strconv.Itoa(info.Subtitles[0].RepTimestamp) + "/" + strconv.Itoa(info.Subtitles[len(info.Subtitles)-1].EndTimestamp) + ".gif", nil
 }
 
 //GetMorbotronGifMeme Returns a URL for a GIF with a caption
