@@ -14,7 +14,7 @@ func TestFrame(t *testing.T) {
 }
 
 func TestMeme(t *testing.T) {
-	final := "https://frinkiac.com/meme/S07E21/579294.jpg?b64lines=YW5kIEkndmUgbmV2ZXIgaGVhcmQKYW55b25lIHVzZSB0aGUgcGhyYXNlCiJzdGVhbWVkIGhhbXMuIg=="
+	final := "https://frinkiac.com/meme/S07E21/579294.jpg?b64lines=T2gsIG5vdCBpbiBVdGljYSwgbm8sCml0J3MgYW4gQWxiYW55CmV4cHJlc3Npb24uCg=="
 	recv, err := GetFrinkiacMeme("Steamed Hams")
 	if err != nil {
 		t.Error(err)
@@ -25,7 +25,7 @@ func TestMeme(t *testing.T) {
 }
 
 func TestGifMeme(t *testing.T) {
-	final := "https://frinkiac.com/gif/S07E21/576200/581967.gif?b64lines=YW5kIEkndmUgbmV2ZXIgaGVhcmQKYW55b25lIHVzZSB0aGUgcGhyYXNlCiJzdGVhbWVkIGhhbXMuIgpPaCwgbm90IGluIFV0aWNhLCBubywKaXQncyBhbiBBbGJhbnkKZXhwcmVzc2lvbi4="
+	final := "https://frinkiac.com/gif/S07E21/576200/581967.gif?b64lines=T2gsIG5vdCBpbiBVdGljYSwgbm8sCml0J3MgYW4gQWxiYW55CmV4cHJlc3Npb24u"
 	recv, err := GetFrinkiacGifMeme("Steamed Hams")
 	if err != nil {
 		t.Error(err)
@@ -47,7 +47,7 @@ func TestMorboFrame(t *testing.T) {
 }
 
 func TestMorboMeme(t *testing.T) {
-	final := "https://morbotron.com/meme/S01E05/1112308.jpg?b64lines=VGhhdCB3YXMganVzdCBhIHNob3cgZm9yCnRoZSBwdWJsaWMu"
+	final := "https://morbotron.com/meme/S01E05/1112308.jpg?b64lines=V2UgYXJlIHRoZSB0cnVlIHJ1bGVycyBvZgp0aGlzIHBsYW5ldC4KSGFuZC1jYXJ2ZWQgZnJvbQptZXRlb3JpdGVzIGJ5IHRoZSByb2JvdApmb3VuZGVycwo="
 	recv, err := GetMorbotronMeme("this planet")
 	if err != nil {
 		t.Error(err)
@@ -58,7 +58,7 @@ func TestMorboMeme(t *testing.T) {
 }
 
 func TestMorboGifMeme(t *testing.T) {
-	final := "https://morbotron.com/gif/S01E05/1108431/1115063.gif?b64lines=VGhhdCB3YXMganVzdCBhIHNob3cgZm9yCnRoZSBwdWJsaWMuCldlIGFyZSB0aGUgdHJ1ZSBydWxlcnMgb2YKdGhpcyBwbGFuZXQuCkhhbmQtY2FydmVkIGZyb20KbWV0ZW9yaXRlcyBieSB0aGUgcm9ib3QKZm91bmRlcnM="
+	final := "https://morbotron.com/gif/S01E05/1109389/1115063.gif?b64lines=VGhhdCB3YXMganVzdCBhIHNob3cgZm9yCnRoZSBwdWJsaWMuCldlIGFyZSB0aGUgdHJ1ZSBydWxlcnMgb2YKdGhpcyBwbGFuZXQuCkhhbmQtY2FydmVkIGZyb20KbWV0ZW9yaXRlcyBieSB0aGUgcm9ib3QKZm91bmRlcnM="
 	recv, err := GetMorbotronGifMeme("this planet")
 	if err != nil {
 		t.Error(err)
