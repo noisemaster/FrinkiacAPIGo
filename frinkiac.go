@@ -1,3 +1,4 @@
+//Package frinkiac provides go bindings for the Frinkiac and Morbotron apis.
 package frinkiac
 
 import (
