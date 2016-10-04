@@ -8,9 +8,12 @@ import (
 
 func main() {
 	fmt.Println("Let's search for a still of steamed hams")
-	fmt.Println(frinkiac.GetFrinkiacFrame("Steamed Hams"))
+	link, _ := frinkiac.GetFrinkiacFrame("Steamed Hams")
+	fmt.Println(link)
 	fmt.Println("What about that with a caption")
-	fmt.Println(frinkiac.GetFrinkiacMeme("Steamed Hams"))
+	link, _ = frinkiac.GetFrinkiacMeme("Steamed Hams")
+	fmt.Println(link)
 	fmt.Println("What about a gif from Morbotron")
-	fmt.Println(frinkiac.GetMorbotronGif("Smells good"))
+	link, _ = frinkiac.GetMorbotronGif("Smells good")
+	fmt.Println(link)
 }
