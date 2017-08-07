@@ -68,6 +68,36 @@ func TestMorboGifMeme(t *testing.T) {
 	}
 }
 
+func TestScienceFrame(t *testing.T) {
+	recv, err := GetMasterOfAllScienceFrame("sauce")
+	if err != nil {
+		t.Error(err)
+	}
+	if recv == "" {
+		t.Error("Recieved an empty string")
+	}
+}
+
+func TestScienceMeme(t *testing.T) {
+	recv, err := GetMasterOfAllScienceMeme("sauce")
+	if err != nil {
+		t.Error(err)
+	}
+	if recv == "" {
+		t.Error("Recieved an empty string")
+	}
+}
+
+func TestScienceGifMeme(t *testing.T) {
+	recv, err := GetMasterOfAllScienceGifMeme("sauce")
+	if err != nil {
+		t.Error(err)
+	}
+	if recv == "" {
+		t.Error("Recieved an empty string")
+	}
+}
+
 func TestGarbage(t *testing.T) {
 	_, err := GetMorbotronGifMeme("soafgnme")
 	if err == nil {

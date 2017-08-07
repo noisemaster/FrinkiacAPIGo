@@ -126,6 +126,52 @@ func getMorbotronEpisodeInfo(frame Frames) (Episode, error) {
 	return info, nil
 }
 
+func getMasterOfAllScienceFrameData(query string) ([]Frames, error) {
+	var info []Frames
+	client := &http.Client{}
+	r := strings.NewReplacer(" ", "%20")
+	req, err := http.NewRequest("GET", "https://masterofallscience.com/api/search?q="+r.Replace(query), nil)
+	if err != nil {
+		return info, err
+	}
+	req.Header.Set("User-Agent", "Frinkiac_Api_Go/0.1")
+	resp, err := client.Do(req)
+	if err != nil {
+		return info, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return info, err
+	}
+	if string(body) == "[]" {
+		return info, errors.New("No results found for this search")
+	}
+	json.Unmarshal(body, &info)
+	return info, nil
+}
+
+func getMasterOfAllScienceEpisodeInfo(frame Frames) (Episode, error) {
+	var info Episode
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", "https://masterofallscience.com/api/caption?e="+frame.Episode+"&t="+strconv.Itoa(frame.Timestamp), nil)
+	if err != nil {
+		return info, err
+	}
+	req.Header.Set("User-Agent", "Frinkiac_Api_Go/0.1")
+	resp, err := client.Do(req)
+	if err != nil {
+		return info, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return info, err
+	}
+	json.Unmarshal(body, &info)
+	return info, nil
+}
+
 //GetFrinkiacFrame Sends a URL of a frame from Frinkiac
 func GetFrinkiacFrame(query string) (string, error) {
 	frames, err := getFrinkiacFrameData(query)
@@ -246,4 +292,65 @@ func GetMorbotronGifMeme(query string) (string, error) {
 	cap = wordwrap.WrapString(cap, 25)
 	uEnc := base64.URLEncoding.EncodeToString([]byte(cap))
 	return "https://morbotron.com/gif/" + info.Frame.Episode + "/" + strconv.Itoa(info.Subtitles[0].RepTimestamp) + "/" + strconv.Itoa(info.Subtitles[len(info.Subtitles)-1].EndTimestamp) + ".gif?b64lines=" + uEnc, nil
+}
+
+//GetMasterOfAllScienceFrame Sends a URL of a frame from Master of All Science
+func GetMasterOfAllScienceFrame(query string) (string, error) {
+	frames, err := getMasterOfAllScienceFrameData(query)
+	if err != nil {
+		return "", err
+	}
+	return "https://masterofallscience.com/img/" + frames[0].Episode + "/" + strconv.Itoa(frames[0].Timestamp) + ".jpg", nil
+}
+
+//GetMasterOfAllScienceMeme Returns a URL of a frame with a caption
+func GetMasterOfAllScienceMeme(query string) (string, error) {
+	var cap string
+	frames, err := getMasterOfAllScienceFrameData(query)
+	if err != nil {
+		return "", err
+	}
+	info, err := getMasterOfAllScienceEpisodeInfo(frames[0])
+	if err != nil {
+		return "", err
+	}
+	for _, v := range info.Subtitles[1:] {
+		cap += v.Content + "\n"
+	}
+	cap = wordwrap.WrapString(cap, 25)
+	uEnc := base64.URLEncoding.EncodeToString([]byte(cap))
+	return "https://masterofallscience.com/meme/" + frames[0].Episode + "/" + strconv.Itoa(frames[0].Timestamp) + ".jpg?b64lines=" + uEnc, nil
+}
+
+//GetMasterOfAllScienceGif Returns a URL for a GIF with a caption
+func GetMasterOfAllScienceGif(query string) (string, error) {
+	frames, err := getMasterOfAllScienceFrameData(query)
+	if err != nil {
+		return "", err
+	}
+	info, err := getMasterOfAllScienceEpisodeInfo(frames[0])
+	if err != nil {
+		return "", err
+	}
+	return "https://masterofallscience.com/gif/" + info.Frame.Episode + "/" + strconv.Itoa(info.Subtitles[0].RepTimestamp) + "/" + strconv.Itoa(info.Subtitles[len(info.Subtitles)-1].EndTimestamp) + ".gif", nil
+}
+
+//GetMasterOfAllScienceGifMeme Returns a URL for a GIF with a caption
+func GetMasterOfAllScienceGifMeme(query string) (string, error) {
+	var cap string
+	frames, err := getMasterOfAllScienceFrameData(query)
+	if err != nil {
+		return "", err
+	}
+	info, err := getMasterOfAllScienceEpisodeInfo(frames[0])
+	if err != nil {
+		return "", err
+	}
+	for _, v := range info.Subtitles {
+		cap += v.Content + "\n"
+	}
+	cap = strings.TrimSuffix(cap, "\n")
+	cap = wordwrap.WrapString(cap, 25)
+	uEnc := base64.URLEncoding.EncodeToString([]byte(cap))
+	return "https://masterofallscience.com/gif/" + info.Frame.Episode + "/" + strconv.Itoa(info.Subtitles[0].RepTimestamp) + "/" + strconv.Itoa(info.Subtitles[len(info.Subtitles)-1].EndTimestamp) + ".gif?b64lines=" + uEnc, nil
 }
